@@ -25,10 +25,19 @@ const App = () => {
         nextId.current += 1; // nextId를 +1씩
     }, [todos],);
 
+
+    // todos배열의 불변성을 유지하면서 id로 항목 지우기 : filter()사용
+    const onRemove = useCallback(
+        id => {
+            debugger;
+            setTodos(todos.filter(todo => todo.id !== id));
+        }, [todos],
+    );
+
     return(
       <TodoTemplate>
         <TodoInsert onInsert={onInsert}/>
-        <TodoList todos={todos}/>
+        <TodoList todos={todos} onRemove={onRemove}/>
       </TodoTemplate>
     );
 }
