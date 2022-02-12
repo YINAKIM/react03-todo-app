@@ -29,15 +29,30 @@ const App = () => {
     // todos배열의 불변성을 유지하면서 id로 항목 지우기 : filter()사용
     const onRemove = useCallback(
         id => {
-            debugger;
             setTodos(todos.filter(todo => todo.id !== id));
         }, [todos],
+    );
+
+    // TodoList컴포넌트에 props로 넣을 함수 > TodoList를 통해 TodoListItem으로 전달 > item별로 state수정되도록 구현
+    const onToggle = useCallback(
+        id => {
+            setTodos(
+                // map함수로 무조건 새로운 배열을 반환(불변성유지)
+                // : onToggle이벤트가 실제 발생한 그id가 같은 요소는 ? checked상태값이 변경된 요소가 return배열에 들어감
+                // : onToggle이벤트가 발생한 id가 아닌 요소들은 ? checked상태값이 그대로유지된 채 return배열에 들어감
+                todos.map(todo =>
+                    todo.id === id ?
+                        {...todo, checked: !todo.checked}
+                        : todo,
+                    )
+            );
+        },[todos]
     );
 
     return(
       <TodoTemplate>
         <TodoInsert onInsert={onInsert}/>
-        <TodoList todos={todos} onRemove={onRemove}/>
+        <TodoList todos={todos} onRemove={onRemove} onToggle={onToggle}/>
       </TodoTemplate>
     );
 }
